@@ -124,6 +124,7 @@ EOF
 </dict>
 </plist>
 EOF
+        touch "dist/$OS_TYPE/$APP_BUNDLE_DISPLAY_NAME.app" # Causes Finder to refresh its state
         ;;
     linux)    echo "Not implemented yet"; false ;;
     windows)  echo "Not implemented yet"; false ;;
