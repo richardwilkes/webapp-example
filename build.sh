@@ -51,6 +51,8 @@ ln -s $GOPATH/src/github.com/richardwilkes/webapp/cef
 mkdir -p dist/$OS_TYPE
 case $OS_TYPE in
     darwin)
+        HELPER_LINK_FLAGS="-F cef/Release -framework Chromium\\ Embedded\\ Framework"
+        HELPER_TARGET_EXE="dist/$OS_TYPE/$APP_NAME.app/Contents/Frameworks/$APP_NAME Helper.app/Contents/MacOS/$APP_NAME Helper"
         TARGET_EXE="dist/$OS_TYPE/$APP_NAME.app/Contents/MacOS/$APP_NAME"
         mkdir -p "dist/$OS_TYPE/$APP_NAME.app/Contents/Frameworks/$APP_NAME Helper.app/Contents/MacOS"
         mkdir -p "dist/$OS_TYPE/$APP_NAME.app/Contents/MacOS"
@@ -124,6 +126,8 @@ EOF
     windows)  echo "Not implemented yet"; false ;;
     *)        echo "Unsupported OS"; false ;;
 esac
+
+cc -I cef $GOPATH/src/github.com/richardwilkes/webapp/helper/cef_helper.c $HELPER_LINK_FLAGS -o "$HELPER_TARGET_EXE"
 
 go build -o "$TARGET_EXE" -v \
     -ldflags=all="-X github.com/richardwilkes/toolbox/cmdline.AppVersion=$VERSION -X github.com/richardwilkes/toolbox/cmdline.GitVersion=$GIT_VERSION -X github.com/richardwilkes/toolbox/cmdline.BuildNumber=$BUILD_NUMBER" \
