@@ -11,21 +11,21 @@ COPYRIGHT_YEARS=2018
 COPYRIGHT_OWNER="Richard A. Wilkes"
 
 # Setup OS_TYPE
-case `uname -s` in
+case $(uname -s) in
     Darwin*)  OS_TYPE=darwin ;;
     Linux*)   OS_TYPE=linux ;;
-    Win*)     OS_TYPE=windows ;;
+    MINGW64*) OS_TYPE=windows ;;
     *)        echo "Unsupported OS"; false ;;
 esac
 
 # Setup GIT_VERSION
 if which git 2>&1 > /dev/null; then
-    if [ -z "`git status --porcelain`" ]; then
+    if [ -z "$(git status --porcelain)" ]; then
         STATE=clean
     else
         STATE=dirty
     fi
-    GIT_VERSION=`git rev-parse HEAD`-$STATE
+    GIT_VERSION=$(git rev-parse HEAD)-$STATE
 else
     GIT_VERSION=Unknown
 fi
@@ -40,10 +40,11 @@ if [ ! -e $GOPATH/src/github.com/richardwilkes/webapp ]; then
     echo "The github.com/richardwilkes/webapp repo must be checked out"
     false
 fi
-pushd $GOPATH/src/github.com/richardwilkes/webapp
+HERE="$(pwd)"
+cd $GOPATH/src/github.com/richardwilkes/webapp
 ./setup.sh
-popd
-/bin/rm -f cef
+cd "$HERE"
+/bin/rm -rf cef
 ln -s $GOPATH/src/github.com/richardwilkes/webapp/cef
 
 # Prepare platform-specific distribution bundle
@@ -126,9 +127,19 @@ EOF
 EOF
         touch "dist/$OS_TYPE/$APP_BUNDLE_DISPLAY_NAME.app" # Causes Finder to refresh its state
         ;;
-    linux)    echo "Not implemented yet"; false ;;
-    windows)  echo "Not implemented yet"; false ;;
-    *)        echo "Unsupported OS"; false ;;
+    linux)
+        echo "Not implemented yet"
+        false
+        ;;
+    windows)
+        TARGET_EXE="dist/$OS_TYPE/$APP_NAME"
+        cp -R cef/Release/* "dist/$OS_TYPE/"
+        cp -R cef/Resources/* "dist/$OS_TYPE/"
+        ;;
+    *)
+        echo "Unsupported OS"
+        false
+        ;;
 esac
 
 go build -o "$TARGET_EXE" -v \
