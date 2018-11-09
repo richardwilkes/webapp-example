@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 
+	"github.com/richardwilkes/toolbox/log/jot"
 	"github.com/richardwilkes/webapp"
 )
 
@@ -19,5 +20,6 @@ func main() {
 		bar.InstallHelpMenu()
 		wnd.ToFront()
 	}
-	webapp.Start()
+	// Start only returns on error
+	jot.Fatal(1, webapp.Start())
 }
