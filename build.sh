@@ -36,34 +36,37 @@ if [ -z $BUILD_NUMBER ]; then
 fi
 
 # Link to the webapp cef tree so builds can work
-if [ ! -e $GOPATH/src/github.com/richardwilkes/webapp ]; then
+WEBAPP_DIR="$GOPATH/src/github.com/richardwilkes/webapp"
+if [ ! -e "$WEBAPP_DIR" ]; then
     echo "The github.com/richardwilkes/webapp repo must be checked out"
     false
 fi
 HERE="$(pwd)"
-cd $GOPATH/src/github.com/richardwilkes/webapp
+cd "$WEBAPP_DIR"
 ./setup.sh
 cd "$HERE"
-/bin/rm -rf cef
-ln -s $GOPATH/src/github.com/richardwilkes/webapp/cef
 
 # Prepare platform-specific distribution bundle
 /bin/rm -rf dist/$OS_TYPE
 mkdir -p dist/$OS_TYPE
 case $OS_TYPE in
     darwin)
-        TARGET_EXE="dist/$OS_TYPE/$APP_BUNDLE_DISPLAY_NAME.app/Contents/MacOS/$APP_NAME"
-        mkdir -p "dist/$OS_TYPE/$APP_BUNDLE_DISPLAY_NAME.app/Contents/Frameworks/$APP_NAME Helper.app/Contents/MacOS"
-        mkdir -p "dist/$OS_TYPE/$APP_BUNDLE_DISPLAY_NAME.app/Contents/Frameworks/$APP_NAME Helper.app/Contents/Frameworks"
-        cc -I cef $GOPATH/src/github.com/richardwilkes/webapp/helper/cef_helper.c \
-            -F cef/Release -framework "Chromium Embedded Framework" \
-            -o "dist/$OS_TYPE/$APP_BUNDLE_DISPLAY_NAME.app/Contents/Frameworks/$APP_NAME Helper.app/Contents/MacOS/$APP_NAME Helper"
-        mkdir -p "dist/$OS_TYPE/$APP_BUNDLE_DISPLAY_NAME.app/Contents/MacOS"
-        mkdir -p "dist/$OS_TYPE/$APP_BUNDLE_DISPLAY_NAME.app/Contents/Resources"
-        cp -R "cef/Release/Chromium Embedded Framework.framework" "dist/$OS_TYPE/$APP_BUNDLE_DISPLAY_NAME.app/Contents/Frameworks/"
-        ln -s "../../../Chromium Embedded Framework.framework" "dist/$OS_TYPE/$APP_BUNDLE_DISPLAY_NAME.app/Contents/Frameworks/$APP_NAME Helper.app/Contents/Frameworks/Chromium Embedded Framework.framework"
-        cp AppIcon.icns "dist/$OS_TYPE/$APP_BUNDLE_DISPLAY_NAME.app/Contents/Resources/AppIcon.icns"
-        cat > "dist/$OS_TYPE/$APP_BUNDLE_DISPLAY_NAME.app/Contents/Info.plist" << EOF
+        APP_BUNDLE="dist/$OS_TYPE/$APP_BUNDLE_DISPLAY_NAME.app"
+        HELPER_APP_BUNDLE="$APP_BUNDLE/Contents/Frameworks/$APP_NAME Helper.app"
+        TARGET_EXE="$APP_BUNDLE/Contents/MacOS/$APP_NAME"
+        mkdir -p "$HELPER_APP_BUNDLE/Contents/MacOS"
+        mkdir -p "$HELPER_APP_BUNDLE/Contents/Frameworks"
+        cc -I "$WEBAPP_DIR/cef" "$WEBAPP_DIR/helper/cef_helper.c" \
+            -F "$WEBAPP_DIR/cef/Release" -framework "Chromium Embedded Framework" \
+            -o "$HELPER_APP_BUNDLE/Contents/MacOS/$APP_NAME Helper"
+        mkdir -p "$APP_BUNDLE/Contents/MacOS"
+        mkdir -p "$APP_BUNDLE/Contents/Resources"
+        cp -R "$WEBAPP_DIR/cef/Release/Chromium Embedded Framework.framework" \
+            "$APP_BUNDLE/Contents/Frameworks/"
+        ln -s "../../../Chromium Embedded Framework.framework" \
+            "$HELPER_APP_BUNDLE/Contents/Frameworks/Chromium Embedded Framework.framework"
+        cp AppIcon.icns "$APP_BUNDLE/Contents/Resources/AppIcon.icns"
+        cat > "$APP_BUNDLE/Contents/Info.plist" << EOF
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
@@ -95,7 +98,7 @@ case $OS_TYPE in
 </dict>
 </plist>
 EOF
-        cat > "dist/$OS_TYPE/$APP_BUNDLE_DISPLAY_NAME.app/Contents/Frameworks/$APP_NAME Helper.app/Contents/Info.plist" << EOF
+        cat > "$HELPER_APP_BUNDLE/Contents/Info.plist" << EOF
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
@@ -125,7 +128,7 @@ EOF
 </dict>
 </plist>
 EOF
-        touch "dist/$OS_TYPE/$APP_BUNDLE_DISPLAY_NAME.app" # Causes Finder to refresh its state
+        touch "$APP_BUNDLE" # Causes Finder to refresh its state
         ;;
     linux)
         echo "Not implemented yet"
@@ -133,8 +136,8 @@ EOF
         ;;
     windows)
         TARGET_EXE="dist/$OS_TYPE/$APP_NAME"
-        cp -R cef/Release/* "dist/$OS_TYPE/"
-        cp -R cef/Resources/* "dist/$OS_TYPE/"
+        cp -R $WEBAPP_DIR/cef/Release/* "dist/$OS_TYPE/"
+        cp -R $WEBAPP_DIR/cef/Resources/* "dist/$OS_TYPE/"
         ;;
     *)
         echo "Unsupported OS"

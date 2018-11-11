@@ -1,3 +1,6 @@
 /.dirtlock
 /cef
 /dist
+/GPUCache
+/VideoDecodeStats
+/blob_storage

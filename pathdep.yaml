@@ -1,0 +1,10 @@
+version: "1.0"
+dependencies:
+- import: github.com/pkg/term
+  commit: 93e6c91493094ff99a036fea0040802a1e0a4f69
+- import: github.com/richardwilkes/toolbox
+  commit: 26ec29feef51f2616e0a458a6f901041e4502de5
+- import: github.com/richardwilkes/webapp
+  commit: 1f1ec34a7e6b436b953c683a82e0f61a373122ec
+- import: gopkg.in/yaml.v2
+  tag: v2.2.1
