@@ -32,9 +32,8 @@ func main() {
 }
 
 func finishStartup() {
-	wnd, err := webapp.NewWindow(webapp.StdWindowMask, webapp.MainDisplay().UsableBounds, "https://youtube.com")
+	wnd, err := webapp.NewWindow(webapp.StdWindowMask, webapp.MainDisplay().UsableBounds, "Example", "https://youtube.com")
 	jot.FatalIfErr(err)
-	wnd.SetTitle("Example")
 	bar := webapp.MenuBarForWindow(wnd)
 	_, aboutItem, prefsItem := bar.InstallAppMenu()
 	aboutItem.Handler = func() { fmt.Println("About menu item selected") }
