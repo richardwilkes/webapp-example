@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"runtime"
 
 	"github.com/richardwilkes/toolbox/atexit"
 	"github.com/richardwilkes/toolbox/cmdline"
@@ -13,26 +12,28 @@ import (
 )
 
 func main() {
-	runtime.LockOSThread() // This must be done before any threading starts
-
 	cmdline.AppName = "Example"
 	cmdline.AppCmdName = "example"
 	cmdline.AppVersion = "0.1"
 	cmdline.CopyrightYears = "2018"
 	cmdline.CopyrightHolder = "Richard A. Wilkes"
 	cmdline.AppIdentifier = "com.trollworks.webapp.example"
+
+	jot.FatalIfErr(webapp.Initialize(driver.ForPlatform()))
+
 	cl := cmdline.New(true)
 	jotrotate.ParseAndSetup(cl)
 
 	webapp.WillFinishStartupCallback = finishStartup
 
 	// Start only returns on error
-	jot.Fatal(1, webapp.Start(driver.ForPlatform()))
+	jot.FatalIfErr(webapp.Start())
 	atexit.Exit(0)
 }
 
 func finishStartup() {
-	wnd := webapp.NewWindow(webapp.StdWindowMask, webapp.MainDisplay().UsableBounds, "https://youtube.com")
+	wnd, err := webapp.NewWindow(webapp.StdWindowMask, webapp.MainDisplay().UsableBounds, "https://youtube.com")
+	jot.FatalIfErr(err)
 	wnd.SetTitle("Example")
 	bar := webapp.MenuBarForWindow(wnd)
 	_, aboutItem, prefsItem := bar.InstallAppMenu()
