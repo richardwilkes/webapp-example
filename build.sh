@@ -35,7 +35,7 @@ if [ -z $BUILD_NUMBER ]; then
     BUILD_NUMBER=Unknown
 fi
 
-# Link to the webapp cef tree so builds can work
+# Setup the webapp cef tree so builds can work
 WEBAPP_DIR="$GOPATH/src/github.com/richardwilkes/webapp"
 if [ ! -e "$WEBAPP_DIR" ]; then
     echo "The github.com/richardwilkes/webapp repo must be checked out"
