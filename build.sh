@@ -135,7 +135,7 @@ EOF
         false
         ;;
     windows)
-        TARGET_EXE="dist/$OS_TYPE/$APP_NAME"
+        TARGET_EXE="dist/$OS_TYPE/$APP_NAME.exe"
         cp -R $WEBAPP_DIR/cef/Release/* "dist/$OS_TYPE/"
         cp -R $WEBAPP_DIR/cef/Resources/* "dist/$OS_TYPE/"
         ;;

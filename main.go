@@ -34,12 +34,11 @@ func main() {
 func finishStartup() {
 	wnd, err := webapp.NewWindow(webapp.StdWindowMask, webapp.MainDisplay().UsableBounds, "Example", "https://youtube.com")
 	jot.FatalIfErr(err)
-	bar := webapp.MenuBarForWindow(wnd)
-	_, aboutItem, prefsItem := bar.InstallAppMenu()
-	aboutItem.Handler = func() { fmt.Println("About menu item selected") }
-	prefsItem.Handler = func() { fmt.Println("Preferences menu item selected") }
-	bar.InstallEditMenu()
-	bar.InstallWindowMenu()
-	bar.InstallHelpMenu()
+	if bar, global, first := webapp.MenuBarForWindow(wnd); !global || first {
+		bar.InstallAppMenu(func() { fmt.Println("About menu item selected") }, func() { fmt.Println("Preferences menu item selected") })
+		bar.InstallEditMenu()
+		bar.InstallWindowMenu()
+		bar.InstallHelpMenu()
+	}
 	wnd.ToFront()
 }
