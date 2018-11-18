@@ -35,14 +35,14 @@ if [ -z $BUILD_NUMBER ]; then
     BUILD_NUMBER=Unknown
 fi
 
-# Setup the webapp cef tree so builds can work
-WEBAPP_DIR="$GOPATH/src/github.com/richardwilkes/webapp"
-if [ ! -e "$WEBAPP_DIR" ]; then
-    echo "The github.com/richardwilkes/webapp repo must be checked out"
+# Setup the CEF tree so builds can work
+CEF_DIR="$GOPATH/src/github.com/richardwilkes/cef"
+if [ ! -e "$CEF_DIR" ]; then
+    echo "The github.com/richardwilkes/cef repo must be checked out"
     false
 fi
 HERE="$(pwd)"
-cd "$WEBAPP_DIR"
+cd "$CEF_DIR"
 ./setup.sh
 cd "$HERE"
 
@@ -56,12 +56,12 @@ case $OS_TYPE in
         TARGET_EXE="$APP_BUNDLE/Contents/MacOS/$APP_NAME"
         mkdir -p "$HELPER_APP_BUNDLE/Contents/MacOS"
         mkdir -p "$HELPER_APP_BUNDLE/Contents/Frameworks"
-        cc -I "$WEBAPP_DIR/cef" "$WEBAPP_DIR/internal/cef/helper/cef_helper.c" \
-            -F "$WEBAPP_DIR/cef/Release" -framework "Chromium Embedded Framework" \
+        cc -I "$CEF_DIR/cef" "$CEF_DIR/helper/helper.c" \
+            -F "$CEF_DIR/cef/Release" -framework "Chromium Embedded Framework" \
             -o "$HELPER_APP_BUNDLE/Contents/MacOS/$APP_NAME Helper"
         mkdir -p "$APP_BUNDLE/Contents/MacOS"
         mkdir -p "$APP_BUNDLE/Contents/Resources"
-        cp -R "$WEBAPP_DIR/cef/Release/Chromium Embedded Framework.framework" \
+        cp -R "$CEF_DIR/cef/Release/Chromium Embedded Framework.framework" \
             "$APP_BUNDLE/Contents/Frameworks/"
         ln -s "../../../Chromium Embedded Framework.framework" \
             "$HELPER_APP_BUNDLE/Contents/Frameworks/Chromium Embedded Framework.framework"
@@ -136,8 +136,8 @@ EOF
         ;;
     windows)
         TARGET_EXE="dist/$OS_TYPE/$APP_NAME.exe"
-        cp -R $WEBAPP_DIR/cef/Release/* "dist/$OS_TYPE/"
-        cp -R $WEBAPP_DIR/cef/Resources/* "dist/$OS_TYPE/"
+        cp -R $CEF_DIR/cef/Release/* "dist/$OS_TYPE/"
+        cp -R $CEF_DIR/cef/Resources/* "dist/$OS_TYPE/"
         ;;
     *)
         echo "Unsupported OS"

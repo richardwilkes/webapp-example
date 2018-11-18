@@ -2,9 +2,11 @@ version: "1.0"
 dependencies:
 - import: github.com/pkg/term
   commit: 27bbf2edb814447174b568fc0875a8e0c1608fae
+- import: github.com/richardwilkes/cef
+  commit: f80bdbf4a66e0118d5d1ef69c605e3e2f5876ec7
 - import: github.com/richardwilkes/toolbox
   commit: 26ec29feef51f2616e0a458a6f901041e4502de5
 - import: github.com/richardwilkes/webapp
-  commit: 6b755f09a2ff2538a19d47f4d4d666d84c96ff74
+  commit: 1d92026977c0224bbe79db69bf8e90d8f553b1c8
 - import: gopkg.in/yaml.v2
   tag: v2.2.1
