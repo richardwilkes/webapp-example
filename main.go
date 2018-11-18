@@ -9,6 +9,7 @@ import (
 	"github.com/richardwilkes/toolbox/log/jotrotate"
 	"github.com/richardwilkes/webapp"
 	"github.com/richardwilkes/webapp/driver"
+	"github.com/richardwilkes/webapp/stdmenu"
 )
 
 func main() {
@@ -35,10 +36,7 @@ func finishStartup() {
 	wnd, err := webapp.NewWindow(webapp.StdWindowMask, webapp.MainDisplay().UsableBounds, "Example", "https://youtube.com")
 	jot.FatalIfErr(err)
 	if bar, global, first := webapp.MenuBarForWindow(wnd); !global || first {
-		bar.InstallAppMenu(func() { fmt.Println("About menu item selected") }, func() { fmt.Println("Preferences menu item selected") })
-		bar.InstallEditMenu()
-		bar.InstallWindowMenu()
-		bar.InstallHelpMenu()
+		stdmenu.FillMenuBar(bar, func() { fmt.Println("About menu item selected") }, func() { fmt.Println("Preferences menu item selected") })
 	}
 	wnd.ToFront()
 }
