@@ -56,7 +56,7 @@ case $OS_TYPE in
         TARGET_EXE="$APP_BUNDLE/Contents/MacOS/$APP_NAME"
         mkdir -p "$HELPER_APP_BUNDLE/Contents/MacOS"
         mkdir -p "$HELPER_APP_BUNDLE/Contents/Frameworks"
-        cc -I "$WEBAPP_DIR/cef" "$WEBAPP_DIR/helper/cef_helper.c" \
+        cc -I "$WEBAPP_DIR/cef" "$WEBAPP_DIR/internal/cef/helper/cef_helper.c" \
             -F "$WEBAPP_DIR/cef/Release" -framework "Chromium Embedded Framework" \
             -o "$HELPER_APP_BUNDLE/Contents/MacOS/$APP_NAME Helper"
         mkdir -p "$APP_BUNDLE/Contents/MacOS"

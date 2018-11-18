@@ -5,6 +5,6 @@ dependencies:
 - import: github.com/richardwilkes/toolbox
   commit: 26ec29feef51f2616e0a458a6f901041e4502de5
 - import: github.com/richardwilkes/webapp
-  commit: 7bb16616cac99f38cded7f53415b919009d14d10
+  commit: 6b755f09a2ff2538a19d47f4d4d666d84c96ff74
 - import: gopkg.in/yaml.v2
   tag: v2.2.1
