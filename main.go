@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 
+	"github.com/richardwilkes/cef"
 	"github.com/richardwilkes/toolbox/atexit"
 	"github.com/richardwilkes/toolbox/cmdline"
 	"github.com/richardwilkes/toolbox/log/jot"
@@ -20,7 +21,8 @@ func main() {
 	cmdline.CopyrightHolder = "Richard A. Wilkes"
 	cmdline.AppIdentifier = "com.trollworks.webapp.example"
 
-	jot.FatalIfErr(webapp.Initialize(driver.ForPlatform()))
+	args, err := webapp.Initialize(driver.ForPlatform())
+	jot.FatalIfErr(err)
 
 	cl := cmdline.New(true)
 	jotrotate.ParseAndSetup(cl)
@@ -28,12 +30,14 @@ func main() {
 	webapp.WillFinishStartupCallback = finishStartup
 
 	// Start only returns on error
-	jot.FatalIfErr(webapp.Start())
+	settings := cef.NewSettings()
+	//settings.LogSeverity = cef.LogseverityVerbose
+	jot.FatalIfErr(webapp.Start(args, settings, nil))
 	atexit.Exit(0)
 }
 
 func finishStartup() {
-	wnd, err := webapp.NewWindow(webapp.StdWindowMask, webapp.MainDisplay().UsableBounds, "Example", "https://youtube.com")
+	wnd, err := webapp.NewWindow(webapp.StdWindowMask, webapp.MainDisplay().UsableBounds, "Example", "https://youtube.com", nil, nil, nil)
 	jot.FatalIfErr(err)
 	if bar, global, first := webapp.MenuBarForWindow(wnd); !global || first {
 		stdmenu.FillMenuBar(bar, func() { fmt.Println("About menu item selected") }, func() { fmt.Println("Preferences menu item selected") })
