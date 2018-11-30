@@ -3,10 +3,10 @@ dependencies:
 - import: github.com/pkg/term
   commit: 27bbf2edb814447174b568fc0875a8e0c1608fae
 - import: github.com/richardwilkes/cef
-  commit: f80bdbf4a66e0118d5d1ef69c605e3e2f5876ec7
+  commit: a0d16b7b8bf4d18c58ad1e64dc7dc43cc57d2031
 - import: github.com/richardwilkes/toolbox
   commit: 26ec29feef51f2616e0a458a6f901041e4502de5
 - import: github.com/richardwilkes/webapp
-  commit: 1d92026977c0224bbe79db69bf8e90d8f553b1c8
+  commit: 788850cded6ef8443009cbe4fe99e7421c1ce217
 - import: gopkg.in/yaml.v2
-  tag: v2.2.1
+  tag: v2.2.2

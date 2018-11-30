@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 
-	"github.com/richardwilkes/cef"
 	"github.com/richardwilkes/toolbox/atexit"
 	"github.com/richardwilkes/toolbox/cmdline"
 	"github.com/richardwilkes/toolbox/log/jot"
@@ -30,9 +29,7 @@ func main() {
 	webapp.WillFinishStartupCallback = finishStartup
 
 	// Start only returns on error
-	settings := cef.NewSettings()
-	//settings.LogSeverity = cef.LogseverityVerbose
-	jot.FatalIfErr(webapp.Start(args, settings, nil))
+	jot.FatalIfErr(webapp.Start(args, nil, nil))
 	atexit.Exit(0)
 }
 
