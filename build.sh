@@ -38,6 +38,9 @@ fi
 # Setup CEF vars
 CEF_DIR=/usr/local/cef
 GOCEF_DIR=$(go list -f '{{.Dir}}' github.com/richardwilkes/cef/cef)
+if [ $OS_TYPE == "windows" ]; then
+    GOCEF_DIR="$(cygpath $GOCEF_DIR)"
+fi
 GOCEF_DIR=${GOCEF_DIR%%/cef}
 if [ -e "$CEF_DIR/include/cef_version.h" ]; then
     CEF_INSTALLED=$(grep "#define CEF_VERSION " "$CEF_DIR/include/cef_version.h" | cut -f 2 -d '"')
