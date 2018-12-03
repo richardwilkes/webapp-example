@@ -13,7 +13,7 @@ COPYRIGHT_OWNER="Richard A. Wilkes"
 # Setup OS_TYPE
 case $(uname -s) in
     Darwin*)  OS_TYPE=darwin ;;
-    Linux*)   OS_TYPE=linux ;;
+    #Linux*)   OS_TYPE=linux ;;
     MINGW64*) OS_TYPE=windows ;;
     *)        echo "Unsupported OS"; false ;;
 esac
