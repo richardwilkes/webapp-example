@@ -37,23 +37,11 @@ fi
 
 # Setup CEF vars
 CEF_DIR=/usr/local/cef
-GOCEF_DIR=$(go list -f '{{.Dir}}' github.com/richardwilkes/cef/cef)
+GOCEF_DIR=$(go list -f '{{.Dir}}' github.com/richardwilkes/cef)
 if [ $OS_TYPE == "windows" ]; then
     GOCEF_DIR="$(cygpath $GOCEF_DIR)"
 fi
-GOCEF_DIR=${GOCEF_DIR%%/cef}
-if [ -e "$CEF_DIR/include/cef_version.h" ]; then
-    CEF_INSTALLED=$(grep "#define CEF_VERSION " "$CEF_DIR/include/cef_version.h" | cut -f 2 -d '"')
-fi
-if [ -e "$GOCEF_DIR/install_cef_for_dev.sh" ]; then
-    CEF_DESIRED=$(grep "CEF_VERSION=" "$GOCEF_DIR/install_cef_for_dev.sh" | cut -f 2 -d '=')
-fi
-if [ "$CEF_INSTALLED" != "$CEF_DESIRED" ] || [ "$CEF_INSTALLED" == "" ]; then
-    echo "The version of CEF in /usr/local is: $CEF_INSTALLED"
-    echo "The version of CEF expected is: $CEF_DESIRED"
-    echo "Please run 'sudo $GOCEF_DIR/install_cef_for_dev.sh' to install the correct version."
-    exit 1
-fi
+go run $GOCEF_DIR/main.go
 
 # Prepare platform-specific distribution bundle
 /bin/rm -rf dist/$OS_TYPE
