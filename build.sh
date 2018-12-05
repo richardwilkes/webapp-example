@@ -41,100 +41,25 @@ GOCEF_DIR=$(go list -f '{{.Dir}}' github.com/richardwilkes/cef)
 if [ $OS_TYPE == "windows" ]; then
     GOCEF_DIR="$(cygpath $GOCEF_DIR)"
 fi
-go run $GOCEF_DIR/main.go
+go run $GOCEF_DIR/main.go install
 
 # Prepare platform-specific distribution bundle
-/bin/rm -rf dist/$OS_TYPE
-mkdir -p dist/$OS_TYPE
+go run $GOCEF_DIR/main.go dist \
+    --name "$APP_BUNDLE_DISPLAY_NAME" \
+    --bundle "$APP_BUNDLE_NAME" \
+    --executable "$APP_NAME" \
+    --release "$APP_VERSION" \
+    --short-release "$APP_VERSION_SHORT" \
+    --year "$COPYRIGHT_YEARS" \
+    --owner "$COPYRIGHT_OWNER" \
+    --id $BUNDLE_ID
 case $OS_TYPE in
     darwin)
-        APP_BUNDLE="dist/$OS_TYPE/$APP_BUNDLE_DISPLAY_NAME.app"
-        HELPER_APP_BUNDLE="$APP_BUNDLE/Contents/Frameworks/$APP_NAME Helper.app"
-        TARGET_EXE="$APP_BUNDLE/Contents/MacOS/$APP_NAME"
-        mkdir -p "$HELPER_APP_BUNDLE/Contents/MacOS"
-        mkdir -p "$HELPER_APP_BUNDLE/Contents/Frameworks"
-        cc -I "$CEF_DIR" "$GOCEF_DIR/helper/helper.c" \
-            -F "$CEF_DIR/Release" -framework "Chromium Embedded Framework" \
-            -o "$HELPER_APP_BUNDLE/Contents/MacOS/$APP_NAME Helper"
-        mkdir -p "$APP_BUNDLE/Contents/MacOS"
-        mkdir -p "$APP_BUNDLE/Contents/Resources"
-        cp -R "$CEF_DIR/Release/Chromium Embedded Framework.framework" \
-            "$APP_BUNDLE/Contents/Frameworks/"
-        ln -s "../../../Chromium Embedded Framework.framework" \
-            "$HELPER_APP_BUNDLE/Contents/Frameworks/Chromium Embedded Framework.framework"
-        cp AppIcon.icns "$APP_BUNDLE/Contents/Resources/AppIcon.icns"
-        cat > "$APP_BUNDLE/Contents/Info.plist" << EOF
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.0</string>
-	<key>CFBundleDisplayName</key>
-	<string>$APP_BUNDLE_DISPLAY_NAME</string>
-	<key>CFBundleName</key>
-	<string>$APP_BUNDLE_NAME</string>
-	<key>CFBundleExecutable</key>
-	<string>$APP_NAME</string>
-	<key>CFBundleIconFile</key>
-	<string>AppIcon.icns</string>
-	<key>CFBundleIdentifier</key>
-	<string>$BUNDLE_ID</string>
-	<key>CFBundlePackageType</key>
-	<string>APPL</string>
-	<key>CFBundleVersion</key>
-	<string>$APP_VERSION</string>
-	<key>CFBundleShortVersionString</key>
-	<string>$APP_VERSION_SHORT</string>
-	<key>NSHumanReadableCopyright</key>
-	<string>© $COPYRIGHT_YEARS by $COPYRIGHT_OWNER. All rights reserved.</string>
-	<key>NSHighResolutionCapable</key>
-	<true/>
-	<key>NSSupportsAutomaticGraphicsSwitching</key>
-	<true/>
-</dict>
-</plist>
-EOF
-        cat > "$HELPER_APP_BUNDLE/Contents/Info.plist" << EOF
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.0</string>
-	<key>CFBundleDisplayName</key>
-	<string>$APP_BUNDLE_DISPLAY_NAME Helper</string>
-	<key>CFBundleName</key>
-	<string>$APP_BUNDLE_NAME Helper</string>
-	<key>CFBundleExecutable</key>
-	<string>$APP_NAME Helper</string>
-	<key>CFBundleIdentifier</key>
-	<string>$BUNDLE_ID.helper</string>
-	<key>CFBundlePackageType</key>
-	<string>APPL</string>
-	<key>CFBundleVersion</key>
-	<string>$APP_VERSION</string>
-	<key>CFBundleShortVersionString</key>
-	<string>$APP_VERSION_SHORT</string>
-	<key>NSHumanReadableCopyright</key>
-	<string>© $COPYRIGHT_YEARS by $COPYRIGHT_OWNER. All rights reserved.</string>
-	<key>NSHighResolutionCapable</key>
-	<true/>
-	<key>NSSupportsAutomaticGraphicsSwitching</key>
-	<true/>
-</dict>
-</plist>
-EOF
-        touch "$APP_BUNDLE" # Causes Finder to refresh its state
-        ;;
-    linux)
-        echo "Not implemented yet"
-        false
+        touch "dist/macos/$APP_BUNDLE_NAME.app" # Causes Finder to refresh its state
+        TARGET_EXE="dist/macos/$APP_BUNDLE_NAME.app/Contents/MacOS/$APP_NAME"
         ;;
     windows)
-        TARGET_EXE="dist/$OS_TYPE/$APP_NAME.exe"
-        cp -R $CEF_DIR/Release/* "dist/$OS_TYPE/"
-        cp -R $CEF_DIR/Resources/* "dist/$OS_TYPE/"
+        TARGET_EXE="dist/windows/$APP_NAME.exe"
         ;;
     *)
         echo "Unsupported OS"
