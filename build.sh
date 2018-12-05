@@ -2,7 +2,6 @@
 set -eo pipefail
 
 APP_NAME=example
-APP_BUNDLE_DISPLAY_NAME=Example
 APP_BUNDLE_NAME=Example
 APP_VERSION=0.1.0
 APP_VERSION_SHORT=0.1
@@ -35,17 +34,12 @@ if [ -z $BUILD_NUMBER ]; then
     BUILD_NUMBER=Unknown
 fi
 
-# Setup CEF vars
-CEF_DIR=/usr/local/cef
-GOCEF_DIR=$(go list -f '{{.Dir}}' github.com/richardwilkes/cef)
-if [ $OS_TYPE == "windows" ]; then
-    GOCEF_DIR="$(cygpath $GOCEF_DIR)"
-fi
-go run $GOCEF_DIR/main.go install
+# Setup CEF
+go install -v github.com/richardwilkes/cef
+cef install
 
 # Prepare platform-specific distribution bundle
-go run $GOCEF_DIR/main.go dist \
-    --name "$APP_BUNDLE_DISPLAY_NAME" \
+cef dist \
     --bundle "$APP_BUNDLE_NAME" \
     --executable "$APP_NAME" \
     --release "$APP_VERSION" \
