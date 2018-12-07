@@ -1,7 +1,6 @@
 module github.com/richardwilkes/webapp-example
 
 require (
-	github.com/kr/pty v1.1.3 // indirect
-	github.com/richardwilkes/toolbox v1.1.1
-	github.com/richardwilkes/webapp v0.0.0-20181205214945-fda229d29793
+	github.com/richardwilkes/toolbox v1.1.2
+	github.com/richardwilkes/webapp v0.0.0-20181207163853-50d9f0063f3b
 )
