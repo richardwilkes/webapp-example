@@ -34,7 +34,7 @@ func main() {
 }
 
 func finishStartup() {
-	wnd, err := webapp.NewWindow(webapp.StdWindowMask, webapp.MainDisplay().UsableBounds, "Example", "https://youtube.com", nil, nil, nil)
+	wnd, err := webapp.NewWindow(webapp.StdWindowMask, webapp.MainDisplay().UsableBounds, "Example", "https://youtube.com")
 	jot.FatalIfErr(err)
 	if bar, global, first := webapp.MenuBarForWindow(wnd); !global || first {
 		stdmenu.FillMenuBar(bar, func() { fmt.Println("About menu item selected") }, func() { fmt.Println("Preferences menu item selected") })
