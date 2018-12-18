@@ -35,7 +35,7 @@ func finishStartup() {
 	wnd, err := webapp.NewWindow(webapp.StdWindowMask, webapp.MainDisplay().UsableBounds, "Example", "https://youtube.com")
 	jot.FatalIfErr(err)
 	if bar, global, first := webapp.MenuBarForWindow(wnd); !global || first {
-		stdmenu.FillMenuBar(bar, nil, nil)
+		stdmenu.FillMenuBar(bar, nil, nil, true)
 	}
 	wnd.ToFront()
 }
