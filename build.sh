@@ -34,8 +34,9 @@ if [ -z $BUILD_NUMBER ]; then
     BUILD_NUMBER=Unknown
 fi
 
-# Setup CEF
-go install -v github.com/richardwilkes/cef
+# Setup CEF -- subsequent use of the installed 'cef' tool
+# requires that $GOPATH/bin be in your $PATH
+GO111MODULE=off go install -v github.com/richardwilkes/cef
 cef install
 
 # Prepare platform-specific distribution bundle
