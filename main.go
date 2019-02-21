@@ -13,8 +13,8 @@ import (
 func main() {
 	cmdline.AppName = "Example"
 	cmdline.AppCmdName = "example"
-	cmdline.AppVersion = "0.1"
-	cmdline.CopyrightYears = "2018"
+	cmdline.AppVersion = "0.2"
+	cmdline.CopyrightYears = "2018-2019"
 	cmdline.CopyrightHolder = "Richard A. Wilkes"
 	cmdline.AppIdentifier = "com.trollworks.webapp.example"
 

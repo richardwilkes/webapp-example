@@ -3,10 +3,10 @@ set -eo pipefail
 
 APP_NAME=example
 APP_BUNDLE_NAME=Example
-APP_VERSION=0.1.0
-APP_VERSION_SHORT=0.1
+APP_VERSION=0.2.0
+APP_VERSION_SHORT=0.2
 BUNDLE_ID=com.trollworks.example
-COPYRIGHT_YEARS=2018
+COPYRIGHT_YEARS=2018-2019
 COPYRIGHT_OWNER="Richard A. Wilkes"
 
 # Setup OS_TYPE
@@ -36,7 +36,7 @@ fi
 
 # Setup CEF -- subsequent use of the installed 'cef' tool
 # requires that $GOPATH/bin be in your $PATH
-GO111MODULE=off go install -v github.com/richardwilkes/cef
+go install -v github.com/richardwilkes/cef
 cef install
 
 # Prepare platform-specific distribution bundle
